@@ -102,11 +102,11 @@ Geo-Tagging Images application:
 ```
 ● StackOverflow
 ```
-# Any contributions or suggestions are greatly appreciated and welcomed.
+### Any contributions or suggestions are greatly appreciated and welcomed.
 
-# THANK YOU
+### THANK YOU
 
-## Contributors
+### Contributors
 - [Pratyush Verma](https://github.com/verma321)
 - [Manish Kumar Sharma](https://github.com/shubhman20)
 - [Utkarsh Verma](https://github.com/UTKARSHANANDX)
