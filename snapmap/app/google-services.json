@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "140205274045",
+    "project_id": "snapmap-817d4",
+    "storage_bucket": "snapmap-817d4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:140205274045:android:343937a99a2a2ce43898d4",
+        "android_client_info": {
+          "package_name": "com.example.snapmap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "140205274045-2sbnaftj5cmlfq3ib7v3c5vqqk312uat.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSC67wBFL5dFb_Woj4bSQsQ3XzlU9teo4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "140205274045-2sbnaftj5cmlfq3ib7v3c5vqqk312uat.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
