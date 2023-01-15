@@ -109,6 +109,6 @@ Geo-Tagging Images application:
 ### Contributors
 - [Pratyush Verma](https://github.com/verma321)
 - [Manish Kumar Sharma](https://github.com/shubhman20)
-- [Utkarsh Verma](https://github.com/UTKARSHANANDX)
+- [Utkarsh Anand](https://github.com/UTKARSHANANDX)
 - [Abhijit Kumar](https://github.com/itstechaj)
 
