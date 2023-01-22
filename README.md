@@ -7,9 +7,9 @@
 
 - By Astro Hackers
 
-```
-https://github.com/itstechaj/SnapMap.git
-```
+- **See the demonstration video of SnapMap app** : https://drive.google.com/drive/folders/1JSKN2c0lFVVPW95pSTTcZU4DwzeDUWRl?usp=share_link
+
+
 
 ### SnapMap
 
@@ -29,7 +29,6 @@ functionalities of this innovative application.
 
 
 #### Image Capturing and Geo-tagging
-<img src="https://user-images.githubusercontent.com/74065677/212561661-c82c9901-d54e-455e-9c56-54528a3469a4.jpg" width="300" height="600">
 This application allows users to easily capture images with
 the help of the front or back camera and tag the longitude
 and latitude. You need to give location’s permission to click
@@ -47,17 +46,22 @@ travelers and photographers.
 
 
 ### Database Structure
-<img src="https://user-images.githubusercontent.com/74065677/212563226-703efcc3-9304-4c52-9f9c-dfb906ca0329.jpg" width="600" height="400">
+<img src="https://user-images.githubusercontent.com/74065677/213907389-9680109c-761f-418b-a6e6-0672a500ec5e.png" width="600" height="400">
 **_Firebase_** _:-_ Storing and Organizing Data
 
 SnapMap utilizes **Firebase** as its database solution. Firebase provides a real-time and secure
 cloud-based database that allows us to store and organize the images and their corresponding
 geo-coordinates.
 The database contains the following details:-
-**● Image ID (unique identifier of the image in the format of Date-Day-Time)
+**● UserId (unique identifier of the user in the format of Date-Day-Time)
+● User Details (Details of user like name,email,password,dateofjoin..)
+● All images uploaded by the user
 ● Latitude and Longitude (geo-coordinates of the location where the image was captured)
-● Image URL (URL of the stored image)**
-
+● Image URL (URL of the stored image) with geo-coordinates and upload date and time
+● Image URL (URL of the stored image)
+**
+The structure of the storage is as follows:
+users(root)->userid->{userId,username,email,password,joindate,uploadedImages->{datetime->{imageUrl,latitude,longitude,timeofupload}}}
 
 ### Conclusion
 
@@ -81,17 +85,22 @@ for construction to track progress of the site and many more.
 
 
 ### Demo
-<img src="https://user-images.githubusercontent.com/74065677/212561742-9e514f1c-af4e-4f7e-9e67-3e6045c92154.jpg" width="300" height="600">
+<img src="https://user-images.githubusercontent.com/74065677/213907604-e0b894ac-f488-40f3-9679-357c197c8a9c.jpg" width="300" height="600">
 
-<img src="https://user-images.githubusercontent.com/74065677/212561750-f116f010-1a3f-431c-be38-a8e4b0b3e51e.jpg" width="300" height="600">
 
-<img src="https://user-images.githubusercontent.com/74065677/212561761-57454ed5-0a2e-496e-91de-681ed51df68c.jpg" width="300" height="600">
+<img src="https://user-images.githubusercontent.com/74065677/213907551-5ad8d893-d9ba-4673-8188-92a473278244.jpg" width="300" height="600">
 
+<img src="https://user-images.githubusercontent.com/74065677/213907578-e5dcbbfb-d553-43b2-a32e-2ec932841b5a.jpg" width="300" height="600">
+
+<img src="https://user-images.githubusercontent.com/74065677/213907631-4dbd7d9c-2efb-4350-93be-a15c0e7e4335.jpg" width="300" height="600">
+
+<img src="https://user-images.githubusercontent.com/74065677/213907649-d99cbc6b-3e43-4611-862e-3f8f2ae4c3bc.jpg" width="300" height="600">
+
+<img src="https://user-images.githubusercontent.com/74065677/213908146-2ecddade-c22b-47ec-b37c-373a566a1507.jpg" width="300" height="600">
 
 ### References & Sources
 
-The following sources were used in the research and development of the
-Geo-Tagging Images application:
+The following sources were used in the research and development of the Geo-Tagging Images application:
 
 ```
 ● Bing Map API for displaying current location of user in map
@@ -101,6 +110,9 @@ Geo-Tagging Images application:
 ```
 ```
 ● StackOverflow
+```
+```
+● Youtube
 ```
 ### Any contributions or suggestions are greatly appreciated and welcomed.
 
