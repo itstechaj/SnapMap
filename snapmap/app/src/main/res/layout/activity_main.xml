@@ -63,4 +63,13 @@
             app:rippleColor="@color/purple_700" />
     </LinearLayout>
 
+    <Button
+        android:id="@+id/showUploadedImages"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="30dp"
+        android:text="Show Uploaded Images"
+        app:rippleColor="@color/purple_700" />
+
 </LinearLayout>

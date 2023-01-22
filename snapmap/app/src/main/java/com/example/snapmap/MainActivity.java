@@ -35,6 +35,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -46,6 +50,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.TimeZone;
 
@@ -59,10 +64,16 @@ import com.google.firebase.storage.UploadTask;
 
 public class MainActivity extends AppCompatActivity {
 
+    //button for showing uploaded image
+    Button showUploadedImgBtn;
+
     private final int CAMERA_REQ_CODE = 100;
     private final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private static final int REQUEST_STORAGE_PERMISSION = 1;
     private StorageReference storagereference;
+    DatabaseReference databaseReference;
+//    DatabaseReference databaseReference;
+
     ImageView imgCamera,mapView;
     TextView latLongTextView;
     Intent imgdata;
@@ -77,8 +88,10 @@ public class MainActivity extends AppCompatActivity {
         imgCamera = findViewById(R.id.imgCamera);
         Button btnCamera = findViewById(R.id.btnCamera);
 
-        storagereference = FirebaseStorage.getInstance().getReference();
+        showUploadedImgBtn=findViewById(R.id.showUploadedImages);
 
+        storagereference = FirebaseStorage.getInstance().getReference();
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("users");
 
         //ask for location permission
 
@@ -99,6 +112,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 onCaptureImage(imgdata);
+            }
+        });
+
+        //Showing uploaded image when clicked on showUploadImgBtn
+        showUploadedImgBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //navigate user to corresponding user activity
+                startActivity(new Intent(MainActivity.this,userActivity.class ));
             }
         });
 
@@ -146,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
                     requestStoragePermission();
                     // Store the image locally
                     saveImageOffline(img);
-                    Toast.makeText(this, "Saving offline...", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, "Saving offline...", Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -241,57 +263,57 @@ public class MainActivity extends AppCompatActivity {
         img.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         byte[] bb = bytes.toByteArray();
 
-        uploadToFirebase(bb,"Latitude : "+latitude+" ,Longitude : "+longitude);
+        uploadToFirebase(bb);
     }
 
 
 
-    private void uploadToFirebase(byte[] bb,String locStr)
-    {
-        String filename = "IMG";
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
-            filename = dateFormat.format(new Date());
-
-        }
-
-        ProgressDialog dialog = new ProgressDialog(this);
-        dialog.setTitle("Uploading File...");
-        dialog.show();
-
-        StorageReference riversRef = storagereference.child("images/"+filename+".jpg");
-        StorageReference locRef = storagereference.child("Location_Info/"+filename+".txt");
-
-        byte[] textBytes = locStr.getBytes();
-
-        locRef.putBytes(textBytes);
-
-        riversRef.putBytes(bb).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        dialog.dismiss();
-                        Toast.makeText(MainActivity.this, "Successfully Uploaded", Toast.LENGTH_SHORT).show();
-                    }
-                })
-
-                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                        double percent = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
-                        dialog.setMessage("Uploaded :" + (int) percent + "%");
-                    }
-                })
-
-
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Upload failed
-                        Toast.makeText(MainActivity.this, "Failed To Upload", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
+//    private void uploadToFirebase(byte[] bb,String locStr)
+//    {
+//        String filename = "IMG";
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+//            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//            dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+//            filename = dateFormat.format(new Date());
+//
+//        }
+//
+//        ProgressDialog dialog = new ProgressDialog(this);
+//        dialog.setTitle("Uploading File...");
+//        dialog.show();
+//
+//        StorageReference riversRef = storagereference.child("images/"+filename+".jpg");
+//        StorageReference locRef = storagereference.child("Location_Info/"+filename+".txt");
+//
+//        byte[] textBytes = locStr.getBytes();
+//
+//        locRef.putBytes(textBytes);
+//
+//        riversRef.putBytes(bb).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                        dialog.dismiss();
+//                        Toast.makeText(MainActivity.this, "Successfully Uploaded", Toast.LENGTH_SHORT).show();
+//                    }
+//                })
+//
+//                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+//                        double percent = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
+//                        dialog.setMessage("Uploaded :" + (int) percent + "%");
+//                    }
+//                })
+//
+//
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception exception) {
+//                        // Upload failed
+//                        Toast.makeText(MainActivity.this, "Failed To Upload", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//    }
 
     //function for reverseGeocoding using geocoordinates.
     private String getlocationName(double latitude,double longitude)
@@ -354,4 +376,105 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    private void uploadToFirebase(byte[] bb)
+    {
+        String filename = "IMG";
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.US);
+            dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+            filename = dateFormat.format(new Date());
+
+        }
+
+        ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setTitle("Uploading File...");
+        dialog.show();
+
+        StorageReference riversRef = storagereference.child("images/"+filename+".jpg");
+
+        String finalFilename = filename;
+        riversRef.putBytes(bb).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        dialog.dismiss();
+                        Toast.makeText(MainActivity.this, "Successfully Uploaded", Toast.LENGTH_SHORT).show();
+                        //new code starts here
+                        String imageUrl;
+                        riversRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+//                                Uri downloadUrl = uri;
+                                String imageUrl = uri.toString();
+                                //Do what you want with the url
+                                // generating upload info and setting it starts here
+                                //generating current time
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yy  HH:mm:ss",Locale.US);
+                                dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+                                String timeOfUpload = dateFormat.format(new Date());
+                                uploadInfo imageUploadInfo = new uploadInfo(latitude, longitude,timeOfUpload, imageUrl);
+//                                getting the user id of current login user
+                                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                databaseReference.child(userId).child("Uploaded Images").child(finalFilename).setValue(imageUploadInfo);
+                                // generating upload info and setting it ends here
+                            }
+                            //new code ends here
+
+                        });
+                    }
+                })
+
+                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                        double percent = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
+                        dialog.setMessage("Uploaded :" + (int) percent + "%");
+                    }
+                })
+
+
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Upload failed
+                        Toast.makeText(MainActivity.this, "Failed To Upload", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+
+    public static class uploadInfo {
+
+        public double latitude;
+        public double longitude;
+        public String timeOfUpload;
+        public String imageURL;
+        public uploadInfo(){}
+
+        public uploadInfo(double latitude,double longitude,String timeOfUpload, String url) {
+            this.timeOfUpload = timeOfUpload;
+            this.imageURL = url;
+            this.latitude=latitude;
+            this.longitude=longitude;
+        }
+
+//        public String getUserId() {
+//            return userId;
+//        }
+        public double getLatitude() {
+            return latitude;
+        }
+        public double getLongitude() {
+            return longitude;
+        }
+        public String getImageURL() {
+            return imageURL;
+        }
+        public String getTimeOfUpload() {
+            return timeOfUpload;
+        }
+    }
+
+
+
 }
+
