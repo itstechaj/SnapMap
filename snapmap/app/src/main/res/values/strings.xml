@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">SnapMap</string>
+    <string name="top_icon">TOP ICON</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">LOGIN</string>
+    <string name="forgot_password">FORGOT PASSWORD?</string>
+    <string name="or">OR</string>
+    <string name="new_user_register_now">New User? Register Now</string>
 </resources>

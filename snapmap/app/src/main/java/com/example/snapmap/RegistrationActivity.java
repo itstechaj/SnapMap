@@ -6,6 +6,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,7 +28,8 @@ import java.util.TimeZone;
 
 public class RegistrationActivity extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
-    Button signupBtn,loginBtn;
+    Button signupBtn;
+    TextView loginBtn;
     EditText username,email, password;
     FirebaseAuth mAuth;
 
