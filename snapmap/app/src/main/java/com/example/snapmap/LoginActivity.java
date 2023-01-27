@@ -7,11 +7,14 @@ import android.os.Bundle;
 import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+
+import org.w3c.dom.Text;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText email, password;
@@ -25,7 +28,7 @@ public class LoginActivity extends AppCompatActivity {
         password=findViewById(R.id.passwordEditText);
         Button btn_login = findViewById(R.id.loginButton);
         //register
-        Button btn_sign = findViewById(R.id.signupButton);
+        TextView btn_sign = findViewById(R.id.signupButton);
         mAuth=FirebaseAuth.getInstance();
         //shared preference declaration
         final SharedPreferences sharedPreferences=getSharedPreferences("LoginData", Context.MODE_PRIVATE);
