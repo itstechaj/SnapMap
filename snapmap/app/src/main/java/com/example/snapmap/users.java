@@ -13,7 +13,7 @@ public class users {
     public String email;
     public String password;
     public String joinDate;
-
+    public users(){};
     public String getUserId() {
         return userId;
     }

@@ -42,6 +42,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Console;
 import java.io.File;
 
 import java.io.IOException;
@@ -136,9 +137,35 @@ public class MainActivity extends AppCompatActivity {
                 Bitmap img = (Bitmap) (data.getExtras().get("data"));
 
                 Location location = getCurrentLocation();
-                assert location != null : "Location is NULL";
-                latitude = location.getLatitude();
-                longitude = location.getLongitude();
+
+                if(location!=null)
+                {
+                    latitude = location.getLatitude();
+                    longitude = location.getLongitude();
+                }
+                //Handle location ==NULL
+                else
+                {
+                    latitude=23.5479869; //default latitude value
+                    longitude=87.2890343; //default latitude value
+                    // show the alert dialog to open the detailed system settings
+                    new AlertDialog.Builder(this)
+                            .setTitle("Location Permission and GPS Needed")
+                            .setMessage("Please Give location and GPS access from setting and recapture " +
+                                    "to get correct location (Click Ok -> Turn on Location and click on App " +
+                                    "location permission then allow for SnapMap)")
+
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    //Prompt the user once explanation has been shown
+                                    openLocationSettings();
+                                }
+                            })
+                            .create()
+                            .show();
+                }
+
 
 
                 String bingMapsApiKey = "AmqwMGmPtRT0bZK_I2ww-yIDuL2WYd3YsWhjbSxYMWMqq-IJtE0ifNWMvJPJPz2S"; // Replace with your own Bing Maps API key
@@ -154,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
                 String locationName = getlocationName(latitude, longitude);
 
                 // Set the latitude and longitude text
-                latLongTextView.setText(String.format("Location: %s\nLatitude: %s, Longitude: %s", locationName, latitude, longitude));
+                latLongTextView.setText(String.format("%s\nLatitude: %s, Longitude: %s", locationName, latitude, longitude));
 
                 // Use Picasso library to load the map image
                 Picasso.get().load(mapUrl).into(mapView);
@@ -223,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Permission Granted!", Toast.LENGTH_SHORT).show();
             } else {
                 // Permission denied
-                Toast.makeText(this, "Location permission denied. This app will not work...", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Location permission denied. This app will not work.", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -232,21 +259,21 @@ public class MainActivity extends AppCompatActivity {
     private Location getCurrentLocation() {
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            Toast.makeText(this, "Please enable location services.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please enable GPS for live Location.", Toast.LENGTH_SHORT).show();
+//            openLocationSettings();
             return null;
+
         }
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(this, "Location permission not granted.", Toast.LENGTH_SHORT).show();
+//            askForLocationPermission();
             return null;
         }
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (location == null) {
             location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         }
-        String latstr=String.valueOf(location.getLatitude());
-        String longstr=String.valueOf(location.getLongitude());
-        String msg="Longitude="+longstr+" & Latitude="+latstr;
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+
         return location;
     }
 
@@ -267,75 +294,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-//    private void uploadToFirebase(byte[] bb,String locStr)
-//    {
-//        String filename = "IMG";
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-//            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//            dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
-//            filename = dateFormat.format(new Date());
-//
-//        }
-//
-//        ProgressDialog dialog = new ProgressDialog(this);
-//        dialog.setTitle("Uploading File...");
-//        dialog.show();
-//
-//        StorageReference riversRef = storagereference.child("images/"+filename+".jpg");
-//        StorageReference locRef = storagereference.child("Location_Info/"+filename+".txt");
-//
-//        byte[] textBytes = locStr.getBytes();
-//
-//        locRef.putBytes(textBytes);
-//
-//        riversRef.putBytes(bb).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                    @Override
-//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                        dialog.dismiss();
-//                        Toast.makeText(MainActivity.this, "Successfully Uploaded", Toast.LENGTH_SHORT).show();
-//                    }
-//                })
-//
-//                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-//                    @Override
-//                    public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-//                        double percent = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
-//                        dialog.setMessage("Uploaded :" + (int) percent + "%");
-//                    }
-//                })
-//
-//
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception exception) {
-//                        // Upload failed
-//                        Toast.makeText(MainActivity.this, "Failed To Upload", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//    }
-
     //function for reverseGeocoding using geocoordinates.
     private String getlocationName(double latitude,double longitude)
     {
-        String cityName = null;
+        String locality_name = "Unknown";
         Geocoder geocoder = new Geocoder(this);
         List<Address> addresses;
         try {
             addresses = geocoder.getFromLocation(latitude, longitude, 1);
             if (addresses != null && !addresses.isEmpty()) {
                 Address address = addresses.get(0);
-                for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
-                    if(address.getLocality() != null){
-                        cityName = address.getLocality();
-                        break;
-                    }
+                if(address.getAddressLine(0)!=null) {
+                    locality_name = address.getAddressLine(0);
                 }
+
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return cityName;
+        return locality_name;
     }
     //Function to check weather internet is on or off
     private boolean isDataEnabled() {
@@ -457,7 +434,7 @@ public class MainActivity extends AppCompatActivity {
             this.longitude=longitude;
         }
 
-//        public String getUserId() {
+        //        public String getUserId() {
 //            return userId;
 //        }
         public double getLatitude() {

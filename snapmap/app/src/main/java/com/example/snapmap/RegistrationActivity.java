@@ -1,6 +1,8 @@
 package com.example.snapmap;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -34,6 +36,9 @@ public class RegistrationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //shared preference declaration
+        final SharedPreferences sharedPreferences=getSharedPreferences("LoginData", Context.MODE_PRIVATE);
+
         setContentView(R.layout.activity_registration);
         username=findViewById(R.id.usernameEditText);
         email=findViewById(R.id.emailEditText);
@@ -107,8 +112,14 @@ public class RegistrationActivity extends AppCompatActivity {
 
                                     users user=new users(uid,usernametxt,emailtxt,passwordtxt,joinDate);
                                     firebaseDatabase.getReference().child("users").child(uid).setValue(user);
-
-                                    startActivity(new Intent(RegistrationActivity.this,MainActivity.class ));
+                                    //now we also have to save the login user data into shared preference
+                                    //first save the login data into shared preference for future login
+                                    SharedPreferences.Editor editor=sharedPreferences.edit();
+                                    editor.putString("userEmail",emailtxt);
+                                    editor.putString("password",passwordtxt);
+                                    editor.apply();
+                                    //now registration successful and also saved in shared preference .now redirect to homeActivity
+                                    startActivity(new Intent(RegistrationActivity.this,HomeActivity.class ));
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Toast.makeText(RegistrationActivity.this,"Already Registered!! Please Login",Toast.LENGTH_SHORT).show();

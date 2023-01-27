@@ -38,6 +38,10 @@ public class userActivity extends AppCompatActivity {
         myAdapter = new MyAdapter(this,list);
         recyclerView.setAdapter(myAdapter);
 
+        //extra code for image zoom overlay starts here
+
+        //extra code for image zoom overlay ends here
+
         database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
